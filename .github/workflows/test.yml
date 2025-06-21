@@ -21,6 +21,7 @@ jobs:
 
     - name: Build and Tag Docker Image
       run: |
+        cd Jenkins/Python-ToDo
         docker build -q -t $DOCKER_IMAGE:$DOCKER_TAG .
         docker tag $DOCKER_IMAGE:$DOCKER_TAG $DOCKER_IMAGE:$DOCKER_LATEST_TAG
 
