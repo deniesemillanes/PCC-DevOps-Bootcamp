@@ -5,14 +5,14 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/kjakepcc/PCC-DevOps-Bootcamp'
         REPO_DIR = '/home/ubuntu/PCC-DevOps-Bootcamp'
-        DOCKER_IMAGE = 'kjakepcc/pcc-python-todo-sample-app'
+        DOCKER_IMAGE = 'kjakepcc/pcc-python-todo-sample-app-batch10'
         DOCKER_TAG = "${currentBuild.number}"
         DOCKER_LATEST_TAG = 'latest'
         DOCKERHUB_CREDENTIALS_ID = 'dockerhub-credentials'
     }
 
     stages {
-        stage('Checkout') {
+        stage('Update code') {
             steps {
                 dir("${REPO_DIR}") {
                     git url: "${REPO_URL}"
