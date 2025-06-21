@@ -6,9 +6,7 @@ on:
       - master
 
 env:
-  REPO_DIR: /home/ubuntu/PCC-DevOps-Bootcamp
-  REPO_URL: https://github.com/kjakepcc/your-repo.git
-  DOCKER_IMAGE: kjakepcc/python-todo
+  DOCKER_IMAGE: kjakepcc/pcc-python-todo-sample-app-batch10
   DOCKER_TAG: v1.0.0
   DOCKER_LATEST_TAG: latest
 
