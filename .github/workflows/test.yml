@@ -38,6 +38,7 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         port: 22
+        envs: DOCKER_IMAGE,DOCKER_TAG,HEADER_COLOR
         script: |
           docker stop python-todo-app || true
           docker rm python-todo-app || true
