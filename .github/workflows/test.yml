@@ -1,16 +1,46 @@
-name: Hello World Workflow
+name: Build and Deploy Python ToDo App
 
 on:
   push:
     branches:
       - master
 
+env:
+  REPO_DIR: /home/ubuntu/PCC-DevOps-Bootcamp
+  REPO_URL: https://github.com/kjakepcc/your-repo.git
+  DOCKER_IMAGE: kjakepcc/python-todo
+  DOCKER_TAG: v1.0.0
+  DOCKER_LATEST_TAG: latest
+
 jobs:
-  say-hello:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Say Hello
-        run: echo "Hello, world!"
+    - name: Build and Tag Docker Image
+      run: |
+        docker build -q -t $DOCKER_IMAGE:$DOCKER_TAG .
+        docker tag $DOCKER_IMAGE:$DOCKER_TAG $DOCKER_IMAGE:$DOCKER_LATEST_TAG
+
+    - name: Login to Docker Hub
+      run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+    - name: Push Docker Images
+      run: |
+        docker push $DOCKER_IMAGE:$DOCKER_TAG
+        docker push $DOCKER_IMAGE:$DOCKER_LATEST_TAG
+
+    - name: Deploy on EC2 via SSH
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          docker stop python-todo-app || true
+          docker rm python-todo-app || true
+          docker pull $DOCKER_IMAGE:$DOCKER_TAG
+          docker run --name python-todo-app -p 5000:5000 -e H1_COLOR=${{ vars.HEADER_COLOR }} -d $DOCKER_IMAGE:$DOCKER_TAG
