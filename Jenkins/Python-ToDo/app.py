@@ -6,7 +6,7 @@ import sqlalchemy
 import logging
 from datetime import datetime
 from sqlalchemy.exc import SQLAlchemyError
-# Test for github actions
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
